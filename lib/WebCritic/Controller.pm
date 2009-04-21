@@ -9,6 +9,18 @@ use Perl::Critic;
 use File::Find::Rule;
 use File::Spec;
 
+sub critic {
+   my $self = shift;
+   if (!$self->param('critic')) {
+      if (-e "$ENV{CRITICIZE}/.perlcriticrc") {
+         $self->param('critic', Perl::Critic->new(-profile => "$ENV{CRITICIZE}/.perlcriticrc"));
+      } else {
+         $self->param('critic', Perl::Critic->new(-theme => 'core'));
+      }
+   }
+   return $self->param('critic');
+}
+
 sub main : StartRunmode {
    my $self = shift;
    return $self->basic_page({
@@ -17,6 +29,7 @@ sub main : StartRunmode {
 }
 
 sub criticisms : Runmode {
+   my $self = shift;
    my @files = File::Find::Rule->file()->name(
       '*.pm','*.pl','*.plx'
    )->in(
@@ -24,8 +37,7 @@ sub criticisms : Runmode {
    );
 
    my @problems;
-
-   my $critic = Perl::Critic->new(-theme => 'core');
+   my $critic = $self->critic;
    foreach my $file (@files) {
       my @violations = $critic->critique($file);
       foreach my $violation (@violations) {
