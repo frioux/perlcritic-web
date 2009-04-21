@@ -3,12 +3,30 @@ Ext.BLANK_IMAGE_URL = '/static/js/lib/ext3/resources/images/default/s.gif';
 
 Ext.onReady( function() {
       Ext.QuickTips.init();
-      var win = new Ext.Viewport({
+      var grid = Ext.ComponentMgr.create({
+            region: 'center',
+            xtype: 'critic_grid'
+         });
+      new Ext.Viewport({
             layout: 'border',
-            items: {
-               region: 'center',
-               xtype: 'critic_grid'
+            items: grid
+         });
+
+      var task = {
+         run: function(){
+            grid.getStore().load();
+         },
+         interval: 30*1000
+      }
+
+      Ext.TaskMgr.start(task);
+
+      new Ext.KeyMap(Ext.getDoc(), {
+            key: 'r',
+            alt: true,
+            handler: function() {
+               Ext.TaskMgr.stop(task);
+               Ext.TaskMgr.start(task);
             }
          });
-      win.show();
-});
+   });
