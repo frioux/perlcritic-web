@@ -4,22 +4,6 @@ use warnings;
 use base 'CGI::Application';
 use feature ':5.10';
 use CGI::Application::Plugin::AutoRunmode;
-use JSON 'encode_json';
-use Perl::Critic;
-use File::Find::Rule;
-use File::Spec;
-
-sub critic {
-   my $self = shift;
-   if (!$self->param('critic')) {
-      if (-e "$ENV{CRITICIZE}/.perlcriticrc") {
-         $self->param('critic', Perl::Critic->new(-profile => "$ENV{CRITICIZE}/.perlcriticrc"));
-      } else {
-         $self->param('critic', Perl::Critic->new(-theme => 'core'));
-      }
-   }
-   return $self->param('critic');
-}
 
 sub main : StartRunmode {
    my $self = shift;
@@ -29,33 +13,14 @@ sub main : StartRunmode {
 }
 
 sub criticisms : Runmode {
-   my $self = shift;
-   my @files = File::Find::Rule->file()->name(
-      '*.pm','*.pl','*.plx'
-   )->in(
-      $ENV{CRITICIZE}
-   );
+   use IO::All;
 
-   my @problems;
-   my $critic = $self->critic;
-   foreach my $file (@files) {
-      my @violations = $critic->critique($file);
-      foreach my $violation (@violations) {
-         push @problems, {
-            description => $violation->description(),
-            explanation => $violation->explanation(),
-            location => [ @{$violation->location()}[0..1] ],
-            filename => File::Spec->abs2rel($file, $ENV{CRITICIZE}),
-            severity => $violation->severity(),
-            policy => $violation->policy(),
-            source => $violation->source(),
-         };
-      }
+   my $io = io('localhost:7890');
+   my $output;
+   while ( my $line = $io->getline ) {
+      $output .= $line;
    }
-
-   return encode_json({
-      data => [ @problems ]
-      });
+   return $output;
 }
 
 sub basic_page {
