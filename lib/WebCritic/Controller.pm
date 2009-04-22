@@ -4,6 +4,7 @@ use warnings;
 use base 'CGI::Application';
 use feature ':5.10';
 use CGI::Application::Plugin::AutoRunmode;
+use JSON 'encode_json';
 
 sub main : StartRunmode {
    my $self = shift;
@@ -13,6 +14,7 @@ sub main : StartRunmode {
 }
 
 sub criticisms : Runmode {
+   my $self = shift;
    use IO::All;
 
    my $io = io('localhost:7890');
@@ -21,6 +23,20 @@ sub criticisms : Runmode {
       $output .= $line;
    }
    return $output;
+}
+
+sub tidy : Runmode {
+   my $self = shift;
+   my $file = $ENV{CRITICIZE} . q{\\} . $self->query->param('filename');
+   use Perl::Tidy ();
+   use File::Copy;
+   Perl::Tidy::perltidy(
+      source => $file,
+      perltidyrc => 'C:\Documents and Settings\frew\.perltidyrc'
+   );
+   move($file, "$file.bak");
+   move("$file.tdy", $file);
+   return encode_json({success => 'true'});
 }
 
 sub basic_page {

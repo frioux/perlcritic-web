@@ -2,6 +2,40 @@
 /*global WebCritic */
 Ext.ns('WebCritic');
 WebCritic.Grid = Ext.extend(Ext.grid.GridPanel, {
+      constructor: function (config) {
+         config = config || {};
+         config.listeners = config.listeners || {};
+         Ext.applyIf(config.listeners, {
+               celldblclick: function(grid, rowIndex, columnIndex, e) {
+                  var row = grid.getStore().getAt(rowIndex);
+                  if (row.get('description') === 'Code is not tidy') {
+                     Ext.Msg.show({
+                           title: 'Are you sure?',
+                           msg: 'Are you sure you want to tidy the file?',
+                           buttons: Ext.Msg.OKCANCEL,
+                           fn: function(buttonId) {
+                              if (buttonId === 'ok') {
+                                 var filename = row.get('filename');
+                                 Ext.Ajax.request({
+                                       url: '/critic/controller/tidy',
+                                       success: function() {
+                                          grid.getStore().load();
+                                       },
+                                       failure: function() {
+                                          Ext.Msg.alert('Failure to tidy', "There was an error tidying the file!");
+                                       },
+                                       params: { filename: filename }
+                                    });
+
+                              }
+                           },
+                           icon: Ext.MessageBox.QUESTION
+                        });
+                  }
+               }
+            });
+         WebCritic.Grid.superclass.constructor.call(this, config);
+      },
       initComponent: function () {
          var config = {
             store: new Ext.data.Store({
