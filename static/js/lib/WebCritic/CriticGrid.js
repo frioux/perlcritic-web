@@ -57,7 +57,6 @@ WebCritic.Grid = Ext.extend(Ext.grid.GridPanel, {
                   ]
                )
             }),
-         loadMask: true,
          columns: [{
                header: 'Severity',
                dataIndex: 'severity',
