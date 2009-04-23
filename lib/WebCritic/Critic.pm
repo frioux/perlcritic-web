@@ -54,6 +54,8 @@ sub criticisms {
    my $files_criticized = $self->{files_criticized};
    my $critic           = $self->critic;
 
+   my $new_files_criticized = {};
+
    foreach my $file (@files) {
       my $mtime = stat($file)->mtime or croak qq{couldn't stat file $file};
       if ( !$files_criticized->{$file} ) {
@@ -61,13 +63,13 @@ sub criticisms {
       }
 
       my $current_file = $files_criticized->{$file};
+      $new_files_criticized->{$file} = $current_file;
 
       if ( $current_file->{timestamp} eq $mtime ) {
          next;
       }
 
       $current_file->{timestamp} = $mtime;
-
       $current_file->{criticisms} = [];
 
       my @violations = $critic->critique($file);
@@ -84,6 +86,8 @@ sub criticisms {
             };
       }
    }
+
+   $self->{files_criticized} = $new_files_criticized;
 
    return encode_json(
       {  data => [ map { @{ $_->{criticisms} } } values %{$files_criticized} ]
