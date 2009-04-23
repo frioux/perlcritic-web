@@ -16,8 +16,8 @@ my $port = shift || $PORT;
 my $socket = io(":$port") or croak "server couldn't load on port $port";
 say "server loaded on port $port";
 
-my $critic = WebCritic::Critic->new({ directory => $dir });
+my $critic = WebCritic::Critic->new( { directory => $dir } );
 while ( my $s = $socket->accept ) {
    say 'Servicing client';
-   $s->print($critic->criticisms);
+   $s->print( $critic->criticisms );
 }

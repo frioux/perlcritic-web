@@ -8,9 +8,7 @@ use JSON 'encode_json';
 
 sub main : StartRunmode {
    my $self = shift;
-   return $self->basic_page({
-         javascript_classes => [ 'CriticGrid' ],
-      });
+   return $self->basic_page( { javascript_classes => ['CriticGrid'], } );
 }
 
 sub criticisms : Runmode {
@@ -32,27 +30,24 @@ sub tidy : Runmode {
    use File::Copy;
    use File::Spec;
 
-   my $file = File::Spec->catfile( $ENV{ CRITICIZE }, $self->query->param('filename') );
-   my @tidy_args = (
-      argv => " -b $file",
-   );
+   my $file = File::Spec->catfile( $ENV{CRITICIZE},
+      $self->query->param('filename') );
+   my @tidy_args = ( argv => " -b $file", );
 
-   if ( $ENV{ PERLTIDYRC } ) {
-      push @tidy_args, ( perltidyrc => $ENV{ PERLTIDYRC });
+   if ( $ENV{PERLTIDYRC} ) {
+      push @tidy_args, ( perltidyrc => $ENV{PERLTIDYRC} );
    }
 
-   Perl::Tidy::perltidy(
-      @tidy_args
-   );
+   Perl::Tidy::perltidy(@tidy_args);
 
-   return encode_json({success => 'true'});
+   return encode_json( { success => 'true' } );
 }
 
 sub basic_page {
-   my $self = shift;
-   my $params = shift;
+   my $self        = shift;
+   my $params      = shift;
    my $javascripts = $params->{javascript_classes};
-   my $html = <<'HTML';
+   my $html        = <<'HTML';
 <html>
 <head>
    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
@@ -62,10 +57,9 @@ sub basic_page {
    <link rel="stylesheet" type="text/css" href="/static/js/lib/ext3/resources/css/ext-all.css" />
 HTML
 
-   $html .= join "\n",
-      map {
-         qq|   <script type="text/javascript" src="/static/js/lib/WebCritic/$_.js"></script>|
-      } @{$javascripts};
+   $html .= join "\n", map {
+      qq|   <script type="text/javascript" src="/static/js/lib/WebCritic/$_.js"></script>|
+   } @{$javascripts};
 
    $html .= <<'HTML';
    <script type="text/javascript" src="/static/js/main.js"></script>
