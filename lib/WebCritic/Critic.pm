@@ -12,9 +12,9 @@ use Carp;
 
 sub new {
    my $class = shift;
-   my ($args) = @_;
+   my $args = shift;
    my $self  = {};
-   bless ($self, $class);
+   bless $self, $class;
    my $directory = $args->{ directory } or croak q{didn't pass a directory into constructor};
    $self->{ files_criticized } = {};
    $self->directory( $args->{ directory } );
@@ -23,8 +23,9 @@ sub new {
 
 sub directory {
    my $self = shift;
-   if (@_) {
-      $self->{ directory } = shift
+   my $dir = shift;
+   if ($dir) {
+      $self->{ directory } = $dir;
    }
    return $self->{ directory };
 }
@@ -55,7 +56,7 @@ sub criticisms {
 
    foreach my $file ( @files ) {
       my $mtime = stat($file)->mtime or croak qq{couldn't stat file $file};
-      unless ( $files_criticized->{ $file } ) {
+      if ( !$files_criticized->{ $file } ) {
          $files_criticized->{ $file } = {
             timestamp => 0,
          };

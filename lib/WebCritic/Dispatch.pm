@@ -8,7 +8,7 @@ sub dispatch_args {
         prefix  => 'WebCritic',
         debug => 0,
         table   => [
-            ''                => { app => 'Controller', rm => 'main' },
+            q{}                => { app => 'Controller', rm => 'main' },
             ':app/:rm?'        => { },
         ],
     };
