@@ -27,15 +27,24 @@ sub criticisms : Runmode {
 
 sub tidy : Runmode {
    my $self = shift;
-   my $file = $ENV{CRITICIZE} . q{\\} . $self->query->param('filename');
+
    use Perl::Tidy ();
    use File::Copy;
-   Perl::Tidy::perltidy(
-      source => $file,
-      perltidyrc => 'C:\Documents and Settings\frew\.perltidyrc'
+   use File::Spec;
+
+   my $file = File::Spec->catfile( $ENV{ CRITICIZE }, $self->query->param('filename') );
+   my @tidy_args = (
+      argv => " -b $file",
    );
-   move($file, "$file.bak");
-   move("$file.tdy", $file);
+
+   if ( $ENV{ PERLTIDYRC } ) {
+      push @tidy_args, ( perltidyrc => $ENV{ PERLTIDYRC });
+   }
+
+   Perl::Tidy::perltidy(
+      @tidy_args
+   );
+
    return encode_json({success => 'true'});
 }
 
