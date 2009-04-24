@@ -4,11 +4,10 @@ Ext.BLANK_IMAGE_URL = '/static/js/lib/ext3/resources/images/default/s.gif';
 Ext.onReady( function() {
       Ext.QuickTips.init();
       var grid = Ext.ComponentMgr.create({
-            region: 'center',
             xtype: 'critic_grid'
          });
       new Ext.Viewport({
-            layout: 'border',
+            layout: 'fit',
             items: grid
          });
 
