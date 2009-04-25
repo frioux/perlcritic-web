@@ -1,5 +1,6 @@
 package WebCritic::Critic;
 use Moose;
+use MooseX::AttributeHelpers;
 use feature ':5.10';
 
 use Perl::Critic;
@@ -16,11 +17,9 @@ has directory => (
    writer => 'set_directory',
 );
 
-sub new {
-   my $class = shift;
+sub BUILD {
+   my $self = shift;
    my $args  = shift;
-   my $self  = {};
-   bless $self, $class;
    my $directory = $args->{directory}
       or croak q{didn't pass a directory into constructor};
    $self->{files_criticized} = {};
