@@ -2,7 +2,6 @@
 
 use strict;
 use warnings;
-use diagnostics;
 use Test::More tests => 5;
 use Test::Exception;
 use lib 'lib';
@@ -20,7 +19,7 @@ my $critic = WebCritic::Critic->new({
 ok defined $critic && ref $critic eq 'WebCritic::Critic',
    'new() works';
 
-ok $critic->directory eq q{t/test_files}, 'directory() works';
+ok $critic->get_directory eq q{t/test_files}, 'get_directory() works';
 {
    my $source =q{print 'perl is cool!';};
    my $filename = 'fool.pl';
