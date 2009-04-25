@@ -3,7 +3,6 @@ use strict;
 use warnings;
 use feature ':5.10';
 
-use JSON 'encode_json';
 use Perl::Critic;
 use File::Find::Rule;
 use File::Spec;
@@ -50,10 +49,7 @@ sub criticisms {
    my $self = shift;
    my $files_criticized = $self->files_criticized;
 
-   return encode_json(
-      {  data => [ map { @{ $_->{criticisms} } } values %{$files_criticized} ]
-      }
-   );
+   return {  data => [ map { @{ $_->{criticisms} } } values %{$files_criticized} ] };
 }
 
 sub files_criticized {

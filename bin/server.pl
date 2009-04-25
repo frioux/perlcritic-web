@@ -9,6 +9,7 @@ use Readonly;
 Readonly my $PORT => 7890;
 use lib 'lib';
 use WebCritic::Critic;
+use JSON 'encode_json';
 
 my $dir = shift;
 my $port = shift || $PORT;
@@ -19,5 +20,5 @@ say "server loaded on port $port";
 my $critic = WebCritic::Critic->new( { directory => $dir } );
 while ( my $s = $socket->accept ) {
    say 'Servicing client';
-   $s->print( $critic->criticisms );
+   $s->print( encode_json $critic->criticisms  );
 }
