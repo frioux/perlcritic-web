@@ -40,7 +40,7 @@ sub critic {
             = Perl::Critic->new( -profile => "$dir/.perlcriticrc" );
       }
       else {
-         $self->{critic} = Perl::Critic->new( -theme => 'core' );
+         $self->{critic} = Perl::Critic->new( -severity => 'brutal', -theme => 'core' );
       }
    }
    return $self->{critic};
@@ -48,7 +48,17 @@ sub critic {
 
 sub criticisms {
    my $self = shift;
-   my @files = File::Find::Rule->file()->name( '*.pm', '*.pl', '*.plx' )
+   my $files_criticized = $self->files_criticized;
+
+   return encode_json(
+      {  data => [ map { @{ $_->{criticisms} } } values %{$files_criticized} ]
+      }
+   );
+}
+
+sub files_criticized {
+   my $self = shift;
+   my @files = File::Find::Rule->file()->name( '*.pm', '*.pl', '*.plx', '*.t' )
       ->in( $self->directory );
 
    my $files_criticized = $self->{files_criticized};
@@ -88,11 +98,6 @@ sub criticisms {
    }
 
    $self->{files_criticized} = $new_files_criticized;
-
-   return encode_json(
-      {  data => [ map { @{ $_->{criticisms} } } values %{$files_criticized} ]
-      }
-   );
 }
 
 1;

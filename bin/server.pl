@@ -7,7 +7,7 @@ use IO::All;
 use Carp;
 use Readonly;
 Readonly my $PORT => 7890;
-use lib '../lib';
+use lib 'lib';
 use WebCritic::Critic;
 
 my $dir = shift;
