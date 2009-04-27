@@ -8,18 +8,17 @@ use File::Spec;
 use File::stat;
 use Carp;
 
-
 has directory => (
-   is => 'rw',
-   isa => 'Str',
+   is       => 'rw',
+   isa      => 'Str',
    required => 1,
-   reader => 'get_directory',
-   writer => 'set_directory',
+   reader   => 'get_directory',
+   writer   => 'set_directory',
 );
 
 has critic => (
-   is => 'ro',
-   lazy => 1,
+   is      => 'ro',
+   lazy    => 1,
    builder => '_build_critic'
 );
 
@@ -27,21 +26,26 @@ sub _build_critic {
    my $self = shift;
    my $dir  = $self->get_directory;
    return Perl::Critic->new(
-      (-e "$dir/.perlcriticrc" ? ( -profile => "$dir/.perlcriticrc" )
-         : ( -severity => 'brutal', -theme => 'core' ) )
+      -e "$dir/.perlcriticrc"
+      ? ( -profile => "$dir/.perlcriticrc" )
+      : ( -severity => 'brutal', -theme => 'core' )
    );
 }
 
 sub criticisms {
    my $self = shift;
-   my $files_criticized = $self->files_criticized;
 
-   return {  data => [ map { @{ $_->{criticisms} } } values %{$files_criticized} ] };
+   return {
+      data => [
+         map { @{ $_->{criticisms} } } values %{ $self->files_criticized }
+      ]
+   };
 }
 
 sub files_criticized {
    my $self = shift;
-   my @files = File::Find::Rule->file()->name( '*.pm', '*.pl', '*.plx', '*.t' )
+   my @files
+      = File::Find::Rule->file()->name( '*.pm', '*.pl', '*.plx', '*.t' )
       ->in( $self->get_directory );
 
    my $files_criticized = $self->{files_criticized};
@@ -62,7 +66,7 @@ sub files_criticized {
          next;
       }
 
-      $current_file->{timestamp} = $mtime;
+      $current_file->{timestamp}  = $mtime;
       $current_file->{criticisms} = [];
 
       my @violations = $critic->critique($file);
