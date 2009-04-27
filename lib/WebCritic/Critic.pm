@@ -1,6 +1,5 @@
 package WebCritic::Critic;
 use Moose;
-use MooseX::AttributeHelpers;
 use feature ':5.10';
 
 use Perl::Critic;
@@ -13,33 +12,24 @@ use Carp;
 has directory => (
    is => 'rw',
    isa => 'Str',
+   required => 1,
    reader => 'get_directory',
    writer => 'set_directory',
 );
 
-sub BUILD {
-   my $self = shift;
-   my $args  = shift;
-   my $directory = $args->{directory}
-      or croak q{didn't pass a directory into constructor};
-   $self->{files_criticized} = {};
-   $self->set_directory( $args->{directory} );
-   return $self;
-}
+has critic => (
+   is => 'ro',
+   lazy => 1,
+   builder => '_build_critic'
+);
 
-sub critic {
+sub _build_critic {
    my $self = shift;
    my $dir  = $self->get_directory;
-   if ( !$self->{critic} ) {
-      if ( -e "$dir/.perlcriticrc" ) {
-         $self->{critic}
-            = Perl::Critic->new( -profile => "$dir/.perlcriticrc" );
-      }
-      else {
-         $self->{critic} = Perl::Critic->new( -severity => 'brutal', -theme => 'core' );
-      }
-   }
-   return $self->{critic};
+   return Perl::Critic->new(
+      (-e "$dir/.perlcriticrc" ? ( -profile => "$dir/.perlcriticrc" )
+         : ( -severity => 'brutal', -theme => 'core' ) )
+   );
 }
 
 sub criticisms {

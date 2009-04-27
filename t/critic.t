@@ -9,7 +9,7 @@ use lib 'lib';
 BEGIN { use_ok 'WebCritic::Critic' };
 
 throws_ok { WebCritic::Critic->new() }
-   qr/didn't pass a directory into constructor/sm,
+   qr/Attribute \(directory\) is required/sm,
    q{didn't pass directory into constructor};
 
 my $critic = WebCritic::Critic->new({
