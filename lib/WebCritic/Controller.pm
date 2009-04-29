@@ -30,7 +30,7 @@ sub criticisms : Runmode {
    my $self = shift;
    use IO::All;
 
-   my $port = $ENV{ CRITIC_PORT };
+   my $port = $ENV{ CRITIC_PORT } || 7890;
 
    my $io = io("localhost:$port");
    my $output;

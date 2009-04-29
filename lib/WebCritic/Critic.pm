@@ -17,9 +17,10 @@ has directory => (
 );
 
 has critic => (
-   is      => 'ro',
-   lazy    => 1,
-   builder => '_build_critic'
+   is       => 'ro',
+   lazy     => 1,
+   builder  => '_build_critic',
+   init_arg => undef
 );
 
 sub _build_critic {
