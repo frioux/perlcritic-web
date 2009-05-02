@@ -6,7 +6,8 @@ WebCritic.Grid = Ext.extend(Ext.grid.GridPanel, {
          var config = {
             store: new Ext.data.Store({
                   proxy: new Ext.data.HttpProxy({
-                        url: 'critic/controller/criticisms',
+                        url: '/critic?rm=criticisms',
+                        method: 'GET',
                         timeout: 1800000
                      }),
                   sortInfo: {

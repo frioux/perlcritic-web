@@ -4,7 +4,8 @@ use strict;
 use warnings;
 use Test::More tests => 5;
 use Test::Exception;
-use lib 'lib';
+use FindBin;
+use lib "$FindBin::Bin/../lib";
 
 BEGIN { use_ok 'WebCritic::Critic' };
 
