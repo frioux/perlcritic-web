@@ -1,6 +1,5 @@
 package WebCritic::Critic;
 use Moose;
-use feature ':5.10';
 
 use Perl::Critic;
 use File::Find::Rule;

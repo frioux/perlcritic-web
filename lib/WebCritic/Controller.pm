@@ -2,7 +2,6 @@ package WebCritic::Controller;
 use strict;
 use warnings;
 use base 'CGI::Application';
-use feature ':5.10';
 use CGI::Application::Plugin::AutoRunmode;
 use JSON 'encode_json';
 use WebCritic::Critic;
