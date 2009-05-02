@@ -5,9 +5,11 @@ use CGI::Application::Server;
 use FindBin;
 use lib "$FindBin::Bin/../lib";
 use WebCritic::Controller;
+use Readonly;
+Readonly my $port => shift || 5053;
+Readonly my $dir => shift || q{.};
 
-my $server = CGI::Application::Server->new(5053);
-my $dir = shift || q{.};
+my $server = CGI::Application::Server->new($port);
 my $app = WebCritic::Controller->new(PARAMS => {
    dir => $dir
 });
