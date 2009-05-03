@@ -1,11 +1,12 @@
 package WebCritic::Critic;
 use Moose;
-
 use Perl::Critic;
 use File::Find::Rule;
 use File::Spec;
 use File::stat;
-use Carp;
+use Carp qw(croak carp cluck);
+use Method::Signatures;
+use Moose::Autobox;
 
 has directory => (
    is       => 'rw',
@@ -22,8 +23,7 @@ has critic => (
    init_arg => undef
 );
 
-sub _build_critic {
-   my $self = shift;
+method _build_critic {
    my $dir  = $self->get_directory;
    return Perl::Critic->new(
       -e "$dir/.perlcriticrc"
@@ -32,18 +32,13 @@ sub _build_critic {
    );
 }
 
-sub criticisms {
-   my $self = shift;
-
+method criticisms {
    return {
-      data => [
-         map { @{ $_->{criticisms} } } values %{ $self->files_criticized }
-      ]
+      data => [ %{ $self->files_criticized }->values->map->(sub { @{ $_->{criticisms} } }) ]
    };
 }
 
-sub files_criticized {
-   my $self = shift;
+method files_criticized {
    my @files
       = File::Find::Rule->file()->name( '*.pm', '*.pl', '*.plx', '*.t' )
       ->in( $self->get_directory );

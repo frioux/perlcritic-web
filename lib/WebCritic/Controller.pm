@@ -6,6 +6,7 @@ use CGI::Application::Plugin::AutoRunmode;
 use JSON 'encode_json';
 use WebCritic::Critic;
 use Moose;
+use Method::Signatures;
 
 has critic => (
    is => 'ro',
@@ -14,14 +15,12 @@ has critic => (
    builder => '_build_critic',
 );
 
-sub _build_critic {
-   my $self = shift;
+method _build_critic {
    my $dir = '/home/frew/personal/web_critic';
    return WebCritic::Critic->new( { directory => $self->param('dir') || '.' } );
 }
 
-sub main : StartRunmode {
-   my $self = shift;
+method main : StartRunmode {
    my $html        = <<'HTML';
 <html>
 <head>
@@ -41,8 +40,7 @@ HTML
    return $html;
 }
 
-sub criticisms : Runmode {
-   my $self = shift;
+method criticisms : Runmode {
    return encode_json( $self->critic->criticisms );
 }
 
