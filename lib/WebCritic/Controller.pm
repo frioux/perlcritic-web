@@ -16,7 +16,6 @@ has critic => (
 );
 
 method _build_critic {
-   my $dir = '/home/frew/personal/web_critic';
    return WebCritic::Critic->new( { directory => $self->param('dir') || '.' } );
 }
 
