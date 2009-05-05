@@ -1,12 +1,12 @@
 package WebCritic::Critic;
 use Moose;
+use Moose::Autobox;
 use Perl::Critic;
 use File::Find::Rule;
 use File::Spec;
 use File::stat;
-use Carp qw(croak carp cluck);
-use Method::Signatures;
-use Moose::Autobox;
+use Carp qw(croak);
+use Method::Signatures::Simple;
 
 has directory => (
    is       => 'rw',
@@ -34,7 +34,7 @@ method _build_critic {
 
 method criticisms {
    return {
-      data => [ %{ $self->files_criticized }->values->map->(sub { @{ $_->{criticisms} } }) ]
+      data => $self->files_criticized->values->map(sub { @{ $_->{criticisms} } })
    };
 }
 
@@ -57,17 +57,14 @@ method files_criticized {
       my $current_file = $files_criticized->{$file};
       $new_files_criticized->{$file} = $current_file;
 
-      if ( $current_file->{timestamp} eq $mtime ) {
-         next;
-      }
+      next if ( $current_file->{timestamp} eq $mtime );
 
       $current_file->{timestamp}  = $mtime;
       $current_file->{criticisms} = [];
 
       my @violations = $critic->critique($file);
       foreach my $violation (@violations) {
-         push @{ $current_file->{criticisms} },
-            {
+         $current_file->{criticisms}->push({
             description => $violation->description(),
             explanation => $violation->explanation(),
             location    => [ @{ $violation->location() }[ 0 .. 1 ] ],
@@ -75,7 +72,7 @@ method files_criticized {
             severity    => $violation->severity(),
             policy      => $violation->policy(),
             source      => $violation->source(),
-            };
+         });
       }
    }
 
