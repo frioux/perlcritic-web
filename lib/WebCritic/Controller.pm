@@ -1,47 +1,45 @@
-package WebCritic::Controller;
-use strict;
-use warnings;
-use base 'CGI::Application';
-use CGI::Application::Plugin::AutoRunmode;
-use JSON 'encode_json';
-use WebCritic::Critic;
-use Moose;
-use Method::Signatures;
+#!perl
+use Web::Simple 'WebCritic::Controller';
+{
+   package WebCritic::Controller;
+   use WebCritic::Critic;
+   use JSON ();
 
-has critic => (
-   is => 'ro',
-   lazy => 1,
-   init_arg => undef,
-   builder => '_build_critic',
-);
+   my $critic = WebCritic::Critic->new({ directory => '.' });
 
-method _build_critic {
-   return WebCritic::Critic->new( { directory => $self->param('dir') || '.' } );
-}
-
-method main : StartRunmode {
-   my $html        = <<'HTML';
+   sub main {
+         [ 200, [ 'Content-type', 'text/html' ], [
+   q[
 <html>
 <head>
    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
    <title>WebCritic: for your health!</title>
-   <script type="text/javascript" src="/js/lib/ext3/adapter/ext/ext-base.js"></script>
-   <script type="text/javascript" src="/js/lib/ext3/ext-all.js"></script>
-   <link rel="stylesheet" type="text/css" href="/js/lib/ext3/resources/css/ext-all.css" />
-   <script type="text/javascript" src="/js/lib/WebCritic/CriticGrid.js"></script>
-   <script type="text/javascript" src="/js/main.js"></script>
+   <script type="text/javascript" src="/static/js/lib/jquery-1.3.2.min.js"></script>
+   <script type="text/javascript" src="/static/js/main.js"></script>
 </head>
 <body>
 <div id='main'></div>
 </body>
 </html>
-HTML
-   return $html;
+]
+      ] ]
+   }
+
+   sub criticisms {
+      [ 200, [ 'Content-type', 'application/json' ], [ JSON::encode_json( $critic->criticisms )] ]
+   }
+
+   dispatch {
+      sub (/) { $self->main },
+      sub (/criticisms) { $self->criticisms },
+      sub (/static/**) {
+         my $file = $_[1];
+         open my $fh, '<', "static/$file" or return [ 404, [ 'Content-type', 'text/html' ], [ 'file not found']];
+         local $/ = undef;
+         my $data = <$fh>;
+         [ 200, [ 'Content-type' => 'text/html' ], [ $data ] ]
+      },
+   };
 }
 
-method criticisms : Runmode {
-   return encode_json( $self->critic->criticisms );
-}
-
-no Moose;
-__PACKAGE__->meta->make_immutable;
+WebCritic::Controller->run_if_script;
