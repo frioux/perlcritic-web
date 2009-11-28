@@ -41,23 +41,19 @@ WebCritic = {
    },
    formatSource: function(value) {
       return "<td class='source'>"+value+"</td>";
+   },
+   globals: { tableSorted: false },
+   update_criticisms_on_page: function(data) {
+      var html = '<tbody>' + $.map(data.data, WebCritic.generateRow).join('') + '</tbody>';
+      $("#criticisms tbody").replaceWith( html);
+      $("#criticisms").tablesorter({
+         sortList: [[0,1]]
+      });
+   },
+   update_criticisms: function() {
+      $.getJSON("/criticisms", {}, WebCritic.update_criticisms_on_page);
    }
 };
-
-WebCritic.globals = { tableSorted: false };
-
-WebCritic.update_criticisms_on_page = function(data) {
-   var html = '<tbody>' + $.map(data.data, WebCritic.generateRow).join('') + '</tbody>';
-   $("#criticisms tbody").replaceWith( html);
-   $("#criticisms").tablesorter({
-      sortList: [[0,1]]
-   });
-}
-
-WebCritic.update_criticisms = function() {
-   $.getJSON("/criticisms", {}, WebCritic.update_criticisms_on_page);
-}
-
 
 $(document).ready(function() {
    WebCritic.update_criticisms();
