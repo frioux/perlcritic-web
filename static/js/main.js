@@ -1,31 +1,53 @@
-// reference local blank image
-Ext.BLANK_IMAGE_URL = '/static/js/lib/ext3/resources/images/default/s.gif';
+WebCritic = {
+   generateRow: function(rowData) {
+      return '<tr>' +
+         '<td>' + WebCritic.formatSeverity(rowData.severity) + '</td>' +
+         '<td>' + WebCritic.formatFile(rowData.file) + '</td>' +
+         '<td>' + WebCritic.formatLocation(rowData.location) + '</td>' +
+         '<td>' + WebCritic.formatDescription(rowData.description) + '</td>' +
+         '<td>' + WebCritic.formatExplanation(rowData.explanation) + '</td>' +
+         '<td>' + WebCritic.formatPolicy(rowData.policy) + '</td>' +
+         '<td>' + WebCritic.formatSource(rowData.source) + '</td>' +
+         '</tr>';
+   },
+   formatSeverity: function(severity) {
+      return severity;
+   },
+   formatFile: function(file) {
+      return file;
+   },
+   formatLocation: function(loc) {
+      return loc;
+   },
+   formatDescription: function(description) {
+      return description;
+   },
+   formatExplanation: function(explanation) {
+      return explanation;
+   },
+   formatPolicy: function(policy) {
+      return policy;
+   },
+   formatSource: function(source) {
+      return source;
+   }
+};
 
-Ext.onReady( function() {
-      Ext.QuickTips.init();
-      var grid = Ext.ComponentMgr.create({
-            xtype: 'critic_grid'
-         });
-      new Ext.Viewport({
-            layout: 'fit',
-            items: grid
-         });
+WebCritic.update_criticisms_on_page = function(data) {
+   var html = $.map(data.data, WebCritic.generateRow).join('');
+   $("#criticisms tbody").replaceWith( html);
+}
 
-      var task = {
-         run: function(){
-            grid.getStore().load();
-         },
-         interval: 30*1000
-      }
+WebCritic.update_criticisms = function() {
+   $.getJSON("/criticisms", {}, WebCritic.update_criticisms_on_page);
+}
 
-      Ext.TaskMgr.start(task);
 
-      new Ext.KeyMap(Ext.getDoc(), {
-            key: 'r',
-            alt: true,
-            handler: function() {
-               Ext.TaskMgr.stop(task);
-               Ext.TaskMgr.start(task);
-            }
-         });
-   });
+$(document).ready(function() {
+   WebCritic.update_criticisms();
+
+  $("#criticisms").click(function() {
+   WebCritic.update_criticisms();
+  });
+});
+
