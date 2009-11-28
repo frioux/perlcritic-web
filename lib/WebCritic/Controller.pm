@@ -12,6 +12,7 @@ use Web::Simple 'WebCritic::Controller';
 <head>
    <title>WebCritic: for your health!</title>
    <script type="text/javascript" src="/static/js/lib/jquery-1.3.2.min.js"></script>
+   <script type="text/javascript" src="/static/js/lib/jquery.hotkeys-0.7.9.min.js"></script>
    <script type="text/javascript" src="/static/js/lib/tablesorter.js"></script>
    <script type="text/javascript" src="/static/js/main.js"></script>
    <style>
