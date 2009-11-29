@@ -10,38 +10,35 @@ use Web::Simple 'WebCritic::Controller';
    my $main = do {
       use HTML::Tags;
       join '', HTML::Tags::to_html_string(
-      <html>, <head>,
-      <title>,"WebCritic: for your health!",</title>,
-      <script type="text/javascript" src="/static/js/lib/jquery-1.3.2.min.js">,</script>,
-      <script type="text/javascript" src="/static/js/lib/jquery.hotkeys-0.7.9.min.js">,</script>,
-      <script type="text/javascript" src="/static/js/lib/tablesorter.js">,</script>,
-      <script type="text/javascript" src="/static/js/main.js">,</script>,
-      <style>,
-      "* {
-         font-size: 11px;
-         font-family: arial;
-      }
-      table { border-collapse: collapse; }
-      td, tr { border-top: 1px solid grey; }
-      .very-minor { background: #FEE; }
-      .minor { background: #FCC; }
-      .medium { background: #F88; }
-      .major { background: #F44; }
-      .very-major { background: #F00; }
-      .filename { color: grey; }
-      .location { color: grey; }
-      .explanation { color: grey; }
-      .policy { color: grey; }
-      .source { color: grey; }",
-      </style>,
-      </head>,
-      <body>,
-      <div id="criticisms">,</div>,
-      </table>,
-      </body>,
-      </html>
-   );
-};
+         <html>, <head>,
+         <title>,"WebCritic: for your health!",</title>,
+         <script type="text/javascript" src="/static/js/lib/jquery-1.3.2.min.js">,</script>,
+         <script type="text/javascript" src="/static/js/lib/jquery.hotkeys-0.7.9.min.js">,</script>,
+         <script type="text/javascript" src="/static/js/lib/tablesorter.js">,</script>,
+         <script type="text/javascript" src="/static/js/main.js">,</script>,
+         <style>,
+         "* { font-size: 11px; font-family: arial; }
+         table { border-collapse: collapse; }
+         td, tr { border-top: 1px solid grey; }
+         .very-minor { background: #FEE; }
+         .minor { background: #FCC; }
+         .medium { background: #F88; }
+         .major { background: #F44; }
+         .very-major { background: #F00; }
+         .filename { color: grey; }
+         .location { color: grey; }
+         .explanation { color: grey; }
+         .policy { color: grey; }
+         .source { color: grey; }",
+         </style>,
+         </head>,
+         <body>,
+         <div id="criticisms">,</div>,
+         </table>,
+         </body>,
+         </html>
+      );
+   };
 
    sub main {
       return [ 200, [ 'Content-type', 'text/html' ], [ $main ] ];
