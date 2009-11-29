@@ -47,10 +47,12 @@ WebCritic = {
    },
    globals: { tableSorted: false },
    update_criticisms_on_page: function(data) {
-      $("#criticisms tbody").html(
-         $.map(data.data, WebCritic.generateRow).join('')
+      $("#criticisms").replaceWith(
+         '<table><thead><tr><th>Severity</th><th>File</th><th>Location</th><th>Description</th><th>Explanation</th><th>Policy</th><th>Source</th></tr></thead><tbody>' +
+         $.map(data.data, WebCritic.generateRow).join('') +
+         '</tbody></table>'
       );
-      $("#criticisms").tablesorter({
+      $("table").tablesorter({
          sortList: [[0,1]]
       });
    },
@@ -58,7 +60,7 @@ WebCritic = {
       $.getJSON("/criticisms", {}, WebCritic.update_criticisms_on_page);
    },
    toggle_column: function(n, toggled) {
-      var selector = '#criticisms td:nth-child('+n+'),#criticisms th:nth-child('+n+')';
+      var selector = 'td:nth-child('+n+'),th:nth-child('+n+')';
       return function() {
          if (toggled) {
             $(selector).hide();
@@ -71,22 +73,33 @@ WebCritic = {
    }
 };
 
-WebCritic.toggleSeverity    = WebCritic.toggle_column(1, true);
-WebCritic.toggleFile        = WebCritic.toggle_column(2, true);
-WebCritic.toggleLocation    = WebCritic.toggle_column(3, true);
-WebCritic.toggleDescription = WebCritic.toggle_column(4, true);
-WebCritic.toggleExplanation = WebCritic.toggle_column(5, true);
-WebCritic.togglePolicy      = WebCritic.toggle_column(6, true);
-WebCritic.toggleSource      = WebCritic.toggle_column(7, true);
-WebCritic.showAllColumns    = function() {
-   while (!WebCritic.toggleSeverity()) {}
-   while (!WebCritic.toggleFile()) {}
-   while (!WebCritic.toggleLocation()) {}
-   while (!WebCritic.toggleDescription()) {}
-   while (!WebCritic.toggleExplanation()) {}
-   while (!WebCritic.togglePolicy()) {}
-   while (!WebCritic.toggleSource()) {}
-};
+$.extend(WebCritic, {
+   toggleSeverity   : WebCritic.toggle_column(1, true),
+   toggleFile       : WebCritic.toggle_column(2, true),
+   toggleLocation   : WebCritic.toggle_column(3, true),
+   toggleDescription: WebCritic.toggle_column(4, true),
+   toggleExplanation: WebCritic.toggle_column(5, true),
+   togglePolicy     : WebCritic.toggle_column(6, true),
+   toggleSource     : WebCritic.toggle_column(7, true),
+   showAllColumns: function() {
+      while (!WebCritic.toggleSeverity()) {}
+      while (!WebCritic.toggleFile()) {}
+      while (!WebCritic.toggleLocation()) {}
+      while (!WebCritic.toggleDescription()) {}
+      while (!WebCritic.toggleExplanation()) {}
+      while (!WebCritic.togglePolicy()) {}
+      while (!WebCritic.toggleSource()) {}
+   },
+   showDefaultColumns: function() {
+      while (!WebCritic.toggleSeverity()) {}
+      while (!WebCritic.toggleFile()) {}
+      while (!WebCritic.toggleLocation()) {}
+      while (!WebCritic.toggleDescription()) {}
+      while (WebCritic.toggleExplanation()) {}
+      while (WebCritic.togglePolicy()) {}
+      while (WebCritic.toggleSource()) {}
+   }
+});
 
 $(document).ready(function() {
    var doc = $(document);
@@ -97,8 +110,9 @@ $(document).ready(function() {
    doc.bind('keydown', '5', WebCritic.toggleExplanation);
    doc.bind('keydown', '6', WebCritic.togglePolicy);
    doc.bind('keydown', '7', WebCritic.toggleSource);
-   doc.bind('keydown', 'h', WebCritic.toggleSeverity);
+   doc.bind('keydown', 'h', WebCritic.toggleHelp);
    doc.bind('keydown', 'r', WebCritic.update_criticisms);
+   doc.bind('keydown', 'd', WebCritic.showDefaultColumns);
    doc.bind('keydown', 'a', WebCritic.showAllColumns);
    WebCritic.update_criticisms();
    setInterval( WebCritic.update_criticisms, 5*60*1000 );
