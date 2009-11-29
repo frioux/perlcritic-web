@@ -7,16 +7,17 @@ use Web::Simple 'WebCritic::Controller';
 
    my $critic = WebCritic::Critic->new({ directory => q{.} });
 
-   my $main = <<'HTML';
-<html>
-<head>
-   <title>WebCritic: for your health!</title>
-   <script type="text/javascript" src="/static/js/lib/jquery-1.3.2.min.js"></script>
-   <script type="text/javascript" src="/static/js/lib/jquery.hotkeys-0.7.9.min.js"></script>
-   <script type="text/javascript" src="/static/js/lib/tablesorter.js"></script>
-   <script type="text/javascript" src="/static/js/main.js"></script>
-   <style>
-      * {
+   my $main = do {
+      use HTML::Tags;
+      join '', HTML::Tags::to_html_string(
+      <html>, <head>,
+      <title>,"WebCritic: for your health!",</title>,
+      <script type="text/javascript" src="/static/js/lib/jquery-1.3.2.min.js">,</script>,
+      <script type="text/javascript" src="/static/js/lib/jquery.hotkeys-0.7.9.min.js">,</script>,
+      <script type="text/javascript" src="/static/js/lib/tablesorter.js">,</script>,
+      <script type="text/javascript" src="/static/js/main.js">,</script>,
+      <style>,
+      "* {
          font-size: 11px;
          font-family: arial;
       }
@@ -31,15 +32,16 @@ use Web::Simple 'WebCritic::Controller';
       .location { color: grey; }
       .explanation { color: grey; }
       .policy { color: grey; }
-      .source { color: grey; }
-   </style>
-</head>
-<body>
-<div id="criticisms"></div>
-</table>
-</body>
-</html>
-HTML
+      .source { color: grey; }",
+      </style>,
+      </head>,
+      <body>,
+      <div id="criticisms">,</div>,
+      </table>,
+      </body>,
+      </html>
+   );
+};
 
    sub main {
       return [ 200, [ 'Content-type', 'text/html' ], [ $main ] ];
