@@ -45,7 +45,6 @@ WebCritic = {
    formatSource: function(value) {
       return "<td class='source'>"+value+"</td>";
    },
-   globals: { tableSorted: false },
    update_criticisms_on_page: function(data) {
       $("#criticisms").replaceWith(
          '<table><thead><tr><th>Severity</th><th>File</th><th>Location</th><th>Description</th><th>Explanation</th><th>Policy</th><th>Source</th></tr></thead><tbody>' +
@@ -55,49 +54,53 @@ WebCritic = {
       $("table").tablesorter({
          sortList: [[0,1]]
       });
+      WebCritic.hideColumns();
    },
    update_criticisms: function() {
       $.getJSON("/criticisms", {}, WebCritic.update_criticisms_on_page);
    },
-   toggle_column: function(n, toggled) {
+   globals: {
+      shown: [ true, true, true, true, false, false, false ]
+   },
+   hideColumns: function() {
+      $.each(WebCritic.globals.shown, function(i, x) {
+         i++;
+         var selector = 'td:nth-child('+i+'),th:nth-child('+i+')';
+         if (x) {
+            $(selector).show();
+         } else {
+            $(selector).hide();
+         }
+      });
+   },
+   toggleColumn: function(n) {
       var selector = 'td:nth-child('+n+'),th:nth-child('+n+')';
       return function() {
-         if (toggled) {
+         if (WebCritic.globals.shown[n]) {
             $(selector).hide();
          } else {
             $(selector).show();
          }
-         toggled = !toggled;
-         return toggled;
+         WebCritic.globals.shown[n] = !WebCritic.globals.shown[n];
       }
    }
 };
 
 $.extend(WebCritic, {
-   toggleSeverity   : WebCritic.toggle_column(1, true),
-   toggleFile       : WebCritic.toggle_column(2, true),
-   toggleLocation   : WebCritic.toggle_column(3, true),
-   toggleDescription: WebCritic.toggle_column(4, true),
-   toggleExplanation: WebCritic.toggle_column(5, true),
-   togglePolicy     : WebCritic.toggle_column(6, true),
-   toggleSource     : WebCritic.toggle_column(7, true),
+   toggleSeverity   : WebCritic.toggleColumn(1, true),
+   toggleFile       : WebCritic.toggleColumn(2, true),
+   toggleLocation   : WebCritic.toggleColumn(3, true),
+   toggleDescription: WebCritic.toggleColumn(4, true),
+   toggleExplanation: WebCritic.toggleColumn(5, true),
+   togglePolicy     : WebCritic.toggleColumn(6, true),
+   toggleSource     : WebCritic.toggleColumn(7, true),
    showAllColumns: function() {
-      while (!WebCritic.toggleSeverity()) {}
-      while (!WebCritic.toggleFile()) {}
-      while (!WebCritic.toggleLocation()) {}
-      while (!WebCritic.toggleDescription()) {}
-      while (!WebCritic.toggleExplanation()) {}
-      while (!WebCritic.togglePolicy()) {}
-      while (!WebCritic.toggleSource()) {}
+      WebCritic.globals.shown = [ true, true, true, true, true, true, true ];
+      WebCritic.hideColumns();
    },
    showDefaultColumns: function() {
-      while (!WebCritic.toggleSeverity()) {}
-      while (!WebCritic.toggleFile()) {}
-      while (!WebCritic.toggleLocation()) {}
-      while (!WebCritic.toggleDescription()) {}
-      while (WebCritic.toggleExplanation()) {}
-      while (WebCritic.togglePolicy()) {}
-      while (WebCritic.toggleSource()) {}
+      WebCritic.globals.shown = [ true, true, true, true, false, false, false ];
+      WebCritic.hideColumns();
    }
 });
 
