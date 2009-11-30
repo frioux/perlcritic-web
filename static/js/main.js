@@ -73,6 +73,17 @@ WebCritic = {
          }
       });
    },
+   toggleSelector: function(selector) {
+      var toggled = true;
+      return function() {
+         if (toggled) {
+            $(selector).hide();
+         } else {
+            $(selector).show();
+         }
+         toggled = !toggled;
+      }
+   },
    toggleColumn: function(n) {
       var selector = 'td:nth-child('+n+'),th:nth-child('+n+')';
       return function() {
@@ -94,6 +105,7 @@ $.extend(WebCritic, {
    toggleExplanation: WebCritic.toggleColumn(5),
    togglePolicy     : WebCritic.toggleColumn(6),
    toggleSource     : WebCritic.toggleColumn(7),
+   toggleHelp       : WebCritic.toggleSelector('#help'),
    showAllColumns: function() {
       WebCritic.globals.shown = [ true, true, true, true, true, true, true ];
       WebCritic.hideColumns();
