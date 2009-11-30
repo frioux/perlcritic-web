@@ -46,7 +46,7 @@ WebCritic = {
       return "<td class='source'>"+value+"</td>";
    },
    update_criticisms_on_page: function(data) {
-      $("#criticisms").replaceWith(
+      $("#criticisms").html(
          '<table><thead><tr><th>Severity</th><th>File</th><th>Location</th><th>Description</th><th>Explanation</th><th>Policy</th><th>Source</th></tr></thead><tbody>' +
          $.map(data.data, WebCritic.generateRow).join('') +
          '</tbody></table>'
@@ -87,13 +87,13 @@ WebCritic = {
 };
 
 $.extend(WebCritic, {
-   toggleSeverity   : WebCritic.toggleColumn(1, true),
-   toggleFile       : WebCritic.toggleColumn(2, true),
-   toggleLocation   : WebCritic.toggleColumn(3, true),
-   toggleDescription: WebCritic.toggleColumn(4, true),
-   toggleExplanation: WebCritic.toggleColumn(5, true),
-   togglePolicy     : WebCritic.toggleColumn(6, true),
-   toggleSource     : WebCritic.toggleColumn(7, true),
+   toggleSeverity   : WebCritic.toggleColumn(1),
+   toggleFile       : WebCritic.toggleColumn(2),
+   toggleLocation   : WebCritic.toggleColumn(3),
+   toggleDescription: WebCritic.toggleColumn(4),
+   toggleExplanation: WebCritic.toggleColumn(5),
+   togglePolicy     : WebCritic.toggleColumn(6),
+   toggleSource     : WebCritic.toggleColumn(7),
    showAllColumns: function() {
       WebCritic.globals.shown = [ true, true, true, true, true, true, true ];
       WebCritic.hideColumns();

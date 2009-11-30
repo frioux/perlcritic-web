@@ -9,6 +9,7 @@ use Web::Simple 'WebCritic::Controller';
 
    my $main = do {
       use HTML::Tags;
+      use CSS::Tags;
       join '', HTML::Tags::to_html_string(
          <html>, <head>,
          <title>,"WebCritic: for your health!",</title>,
@@ -17,24 +18,80 @@ use Web::Simple 'WebCritic::Controller';
          <script type="text/javascript" src="/static/js/lib/tablesorter.js">,</script>,
          <script type="text/javascript" src="/static/js/main.js">,</script>,
          <style>,
-         "* { font-size: 11px; font-family: arial; }
-         table { border-collapse: collapse; }
-         td, tr { border-top: 1px solid grey; }
-         .very-minor { background: #FEE; }
-         .minor { background: #FCC; }
-         .medium { background: #F88; }
-         .major { background: #F44; }
-         .very-major { background: #F00; }
-         .filename { color: grey; }
-         .location { color: grey; }
-         .explanation { color: grey; }
-         .policy { color: grey; }
-         .source { color: grey; }",
+         CSS::Tags::to_css_string({
+            "*" => {
+               'font-size' => '11px',
+               'font-family' => 'arial',
+            },
+            table => {
+               'border-collapse' => 'collapse',
+            },
+            'td, tr' => {
+               'border-top' => '1px solid grey',
+            },
+            '.very-minor' => {
+               background => '#FEE',
+            },
+            '.minor' => {
+               background => '#FCC',
+            },
+            '.medium' => {
+               background => '#F88',
+            },
+            '.major' => {
+               background => '#F44',
+            },
+            '.very-major' => {
+               background => '#F00',
+            },
+            '.filename' => {
+               color => 'grey',
+            },
+            '.location' => {
+               color => 'grey',
+            },
+            '.explanation' => {
+               color => 'grey',
+            },
+            '.policy' => {
+               color => 'grey',
+            },
+            '.source' => {
+               color => 'grey',
+            },
+            '#criticisms' => { },
+            '#help' => {
+               float => 'right',
+               padding => '.5em',
+               'background-color' => '#CFD4E8',
+               border => '1px solid #B3BDE8',
+               '-moz-border-radius' => '5px',
+               '-webkit-border-radius' => '5px',
+            },
+            '#help ul' => {
+               'list-style-type' => 'none',
+               padding => 0,
+               margin => 0,
+            },
+         }),
          </style>,
          </head>,
          <body>,
-         <div id="criticisms">,</div>,
-         </table>,
+            <div id="help">,
+               <ul>,
+                  <li>, "[1] ", <a href="javascript:WebCritic.toggleSeverity()">, "toggle severity", </a>, </li>,
+                  <li>, "[2] ", <a href="javascript:WebCritic.toggleFile()">, "toggle file", </a>, </li>,
+                  <li>, "[3] ", <a href="javascript:WebCritic.toggleLocation()">, "toggle location", </a>, </li>,
+                  <li>, "[4] ", <a href="javascript:WebCritic.toggleDescription()">, "toggle description", </a>, </li>,
+                  <li>, "[5] ", <a href="javascript:WebCritic.toggleExplanation()">, "toggle explanation", </a>, </li>,
+                  <li>, "[6] ", <a href="javascript:WebCritic.togglePolicy()">, "toggle policy", </a>, </li>,
+                  <li>, "[7] ", <a href="javascript:WebCritic.toggleSource()">, "toggle source", </a>, </li>,
+                  <li>, "[a] ", <a href="javascript:WebCritic.showAllColumns()">, "show all", </a>, </li>,
+                  <li>, "[d] ", <a href="javascript:WebCritic.showDefaultColumns()">, "show default columns", </a>, </li>,
+                  <li>, "[h] ", <a href="javascript:WebCritic.toggleHelp()">, "toggle help", </a>, </li>,
+               </ul>,
+            </div>,
+            <div id="criticisms">,</div>,
          </body>,
          </html>
       );
