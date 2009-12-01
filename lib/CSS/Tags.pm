@@ -5,16 +5,6 @@ use warnings;
 
 use Perl6::Gather;
 
-
-#sub import {
-   #my $pkg = shift;
-   #my $callpkg = caller($ExportLevel);
-
-   #for my $property (@properties) {
-      #*{"$callpkg\::$property"} = sub { return ($property => $_[0]) };
-   #}
-#}
-
 my $IN_SCOPE = 0;
 
 sub import {
