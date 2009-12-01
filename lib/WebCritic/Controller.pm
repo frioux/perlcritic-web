@@ -18,62 +18,34 @@ use Web::Simple 'WebCritic::Controller';
          <script type="text/javascript" src="/static/js/lib/tablesorter.js">,</script>,
          <script type="text/javascript" src="/static/js/main.js">,</script>,
          <style>,
-         CSS::Tags::to_css_string({
-            "*" => {
-               'font-size' => '11px',
-               'font-family' => 'arial',
-            },
-            table => {
-               'border-collapse' => 'collapse',
-            },
-            'td, tr' => {
-               'border-top' => '1px solid grey',
-            },
-            '.very-minor' => {
-               background => '#FEE',
-            },
-            '.minor' => {
-               background => '#FCC',
-            },
-            '.medium' => {
-               background => '#F88',
-            },
-            '.major' => {
-               background => '#F44',
-            },
-            '.very-major' => {
-               background => '#F00',
-            },
-            '.filename' => {
-               color => 'grey',
-            },
-            '.location' => {
-               color => 'grey',
-            },
-            '.explanation' => {
-               color => 'grey',
-            },
-            '.policy' => {
-               color => 'grey',
-            },
-            '.source' => {
-               color => 'grey',
-            },
-            '#criticisms' => { },
-            '#help' => {
-               float => 'right',
-               padding => '.5em',
-               'background-color' => '#CFD4E8',
-               border => '1px solid #B3BDE8',
-               '-moz-border-radius' => '5px',
-               '-webkit-border-radius' => '5px',
-            },
-            '#help ul' => {
-               'list-style-type' => 'none',
-               padding => 0,
-               margin => 0,
-            },
-         }),
+         CSS::Tags::to_css_string([
+               "*" => [ 'font-size' => '11px', 'font-family' => 'arial', ],
+
+               table => [ 'border-collapse' => 'collapse', ],
+               'td, tr' => [ 'border-top' => '1px solid grey', ],
+
+               '.very-minor' => [ background => '#FEE' ],
+               '.minor'      => [ background => '#FCC' ],
+               '.medium'     => [ background => '#F88' ],
+               '.major'      => [ background => '#F44' ],
+               '.very-major' => [ background => '#F00' ],
+
+               '.filename, .location, .explanation, .policy, .source' => [ color => 'grey' ],
+
+               '#help' => [
+                  float                   => 'right',
+                  padding                 => '.5em',
+                  'background-color'      => '#CFD4E8',
+                  border                  => '1px solid #B3BDE8',
+                  '-moz-border-radius'    => '5px',
+                  '-webkit-border-radius' => '5px',
+               ],
+               '#help ul' => [
+                  'list-style-type' => 'none',
+                  padding           => 0,
+                  margin            => 0,
+               ],
+         ]),
          </style>,
          </head>,
          <body>,
