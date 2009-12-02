@@ -9,7 +9,7 @@ use Web::Simple 'WebCritic::Controller';
 
    my $main = do {
       use HTML::Tags;
-      use CSS::Tags;
+      use CSS::Declare;
       join '', HTML::Tags::to_html_string(
          <html>, <head>,
          <title>,"WebCritic: for your health!",</title>,
@@ -18,7 +18,7 @@ use Web::Simple 'WebCritic::Controller';
          <script type="text/javascript" src="/static/js/lib/tablesorter.js">,</script>,
          <script type="text/javascript" src="/static/js/main.js">,</script>,
          <style>,
-         CSS::Tags::to_css_string([
+         CSS::Declare::to_css_string([
                "*" => [ font_size '11px', font_family 'arial' ],
 
                table    => [ border_collapse 'collapse' ],
