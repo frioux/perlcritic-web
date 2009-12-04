@@ -1,4 +1,4 @@
-package WebCritic::Critic;
+package Web::Perl::Critic;
 use Moose;
 use Moose::Autobox;
 use Perl::Critic;
